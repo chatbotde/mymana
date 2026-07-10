@@ -1,4 +1,4 @@
-export const DEMO_OTP = "314711"
+export const DEMO_PASSWORD = "314711"
 export const AUTH_STORAGE_KEY = "mana-web-auth"
 
 export type AuthSession = {
@@ -8,4 +8,8 @@ export type AuthSession = {
 
 export function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+}
+
+export function isValidDemoPassword(password: string) {
+  return password.trim() === DEMO_PASSWORD
 }

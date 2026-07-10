@@ -19,13 +19,13 @@ const menuItems = [
 ] as const
 
 export function AccountView() {
-  const { logout } = useAuth()
+  const { logout, session } = useAuth()
   const { user } = useUser()
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-8 px-6 py-8 md:px-10 md:py-10">
-        <FlowHeader title="Account" backHref={routes.home} />
+        <FlowHeader title="Profile" backHref={routes.home} />
 
         <section className="flex flex-col items-center gap-4 text-center">
           <div className="flex size-16 items-center justify-center rounded-full bg-primary text-[18px] font-semibold text-primary-foreground">
@@ -35,7 +35,9 @@ export function AccountView() {
             <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
               {user.name}
             </h2>
-            <p className="text-[13px] text-muted-foreground">{user.phone}</p>
+            <p className="text-[13px] text-muted-foreground">
+              {session?.email ?? user.phone}
+            </p>
           </div>
         </section>
 

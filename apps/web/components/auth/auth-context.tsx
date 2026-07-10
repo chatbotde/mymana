@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 
 import {
   AUTH_STORAGE_KEY,
-  DEMO_OTP,
+  isValidDemoPassword,
   isValidEmail,
   type AuthSession,
 } from "@/lib/auth"
@@ -14,10 +14,9 @@ import { routes } from "@/lib/routes"
 type AuthContextValue = {
   session: AuthSession | null
   hydrated: boolean
-  sendCode: (email: string) => { ok: true } | { ok: false; error: string }
-  verifyCode: (
+  login: (
     email: string,
-    code: string
+    password: string
   ) => { ok: true } | { ok: false; error: string }
   logout: () => void
 }
@@ -41,19 +40,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setHydrated(true)
   }, [])
 
-  const sendCode = React.useCallback((email: string) => {
+  const login = React.useCallback((email: string, password: string) => {
     if (!isValidEmail(email)) {
       return { ok: false as const, error: "Enter a valid email address" }
     }
-    return { ok: true as const }
-  }, [])
-
-  const verifyCode = React.useCallback((email: string, code: string) => {
-    if (!isValidEmail(email)) {
-      return { ok: false as const, error: "Enter a valid email address" }
+    if (!password.trim()) {
+      return { ok: false as const, error: "Enter your password" }
     }
-    if (code.trim() !== DEMO_OTP) {
-      return { ok: false as const, error: "Invalid code. Use 314711 for demo." }
+    if (!isValidDemoPassword(password)) {
+      return {
+        ok: false as const,
+        error: "Invalid email or password",
+      }
     }
 
     const next: AuthSession = {
@@ -75,11 +73,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       session,
       hydrated,
-      sendCode,
-      verifyCode,
+      login,
       logout,
     }),
-    [session, hydrated, sendCode, verifyCode, logout]
+    [session, hydrated, login, logout]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

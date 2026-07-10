@@ -31,8 +31,8 @@ export function WelcomeView() {
               Get started
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Sign in with email to open your Mana wallet, send money, and
-              manage your card.
+              Sign in with your email and password to open your Mana wallet,
+              send money, and manage your card.
             </p>
           </div>
 

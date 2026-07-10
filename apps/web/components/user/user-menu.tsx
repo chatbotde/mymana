@@ -22,7 +22,7 @@ type UserMenuProps = {
 }
 
 export function UserMenu({ className }: UserMenuProps) {
-  const { logout } = useAuth()
+  const { logout, session } = useAuth()
   const { user } = useUser()
 
   return (
@@ -45,7 +45,7 @@ export function UserMenu({ className }: UserMenuProps) {
         <div className="px-2 py-2">
           <span className="block truncate text-[13px] font-medium">{user.name}</span>
           <span className="block truncate text-[12px] font-normal text-muted-foreground">
-            {user.phone}
+            {session?.email ?? user.phone}
           </span>
         </div>
 
@@ -57,7 +57,7 @@ export function UserMenu({ className }: UserMenuProps) {
             className="gap-2 rounded-md px-2 py-2 text-[13px]"
           >
             <UserRoundIcon />
-            Account
+            Profile
           </DropdownMenuItem>
 
           <DropdownMenuItem

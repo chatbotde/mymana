@@ -7,12 +7,13 @@ import {
   HomeIcon,
   SendIcon,
   TrendingUpIcon,
-  WalletIcon,
 } from "lucide-react"
 
+import { useAuth } from "@/components/auth/auth-context"
 import { ManaLogo } from "@/components/mana-logo"
+import { useUser } from "@/components/user/user-context"
 import { routes } from "@/lib/routes"
-import { Button } from "@workspace/ui/components/button"
+import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar"
 import {
   Sidebar,
   SidebarContent,
@@ -32,8 +33,16 @@ const navItems = [
   { title: "Save", href: routes.save, icon: TrendingUpIcon },
 ] as const
 
+function getProfileLabel(email: string | undefined, name: string) {
+  if (!email) return name
+  return email.split("@")[0] ?? name
+}
+
 export function AppSidebar() {
   const pathname = usePathname()
+  const { session } = useAuth()
+  const { user } = useUser()
+  const profileLabel = getProfileLabel(session?.email, user.name)
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
@@ -76,15 +85,31 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4">
-        <Button
-          nativeButton={false}
-          render={<Link href={routes.account} />}
-          className="h-11 w-full rounded-full text-sm font-medium"
-        >
-          <WalletIcon data-icon="inline-start" />
-          Account
-        </Button>
+      <SidebarFooter className="p-2">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={<Link href={routes.more} />}
+              isActive={pathname === routes.more}
+              tooltip="Profile"
+              className="h-12 rounded-xl px-2 data-active:bg-muted/60"
+            >
+              <Avatar size="sm" className="rounded-md">
+                <AvatarFallback className="rounded-md bg-foreground text-[11px] font-medium text-background">
+                  {user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex min-w-0 flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
+                <span className="truncate text-[13px] font-medium">
+                  {profileLabel}
+                </span>
+                <span className="truncate text-[11px] font-normal text-muted-foreground">
+                  {session?.email ?? user.phone}
+                </span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   )

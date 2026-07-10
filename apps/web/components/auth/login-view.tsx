@@ -7,25 +7,20 @@ import { toast } from "sonner"
 
 import { useAuth } from "@/components/auth/auth-context"
 import { ManaLogo } from "@/components/mana-logo"
-import { DEMO_OTP } from "@/lib/auth"
 import { routes } from "@/lib/routes"
 import { Button } from "@workspace/ui/components/button"
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 
-type Step = "email" | "otp"
-
 export function LoginView() {
   const router = useRouter()
-  const { session, hydrated, sendCode, verifyCode } = useAuth()
-  const [step, setStep] = React.useState<Step>("email")
+  const { session, hydrated, login } = useAuth()
   const [email, setEmail] = React.useState("")
-  const [code, setCode] = React.useState("")
+  const [password, setPassword] = React.useState("")
   const [pending, setPending] = React.useState(false)
 
   React.useEffect(() => {
@@ -34,21 +29,10 @@ export function LoginView() {
     }
   }, [hydrated, session, router])
 
-  function handleSendCode(event: React.FormEvent) {
-    event.preventDefault()
-    const result = sendCode(email)
-    if (!result.ok) {
-      toast.error(result.error)
-      return
-    }
-    setStep("otp")
-    toast.success("Code sent")
-  }
-
-  function handleVerify(event: React.FormEvent) {
+  function handleLogin(event: React.FormEvent) {
     event.preventDefault()
     setPending(true)
-    const result = verifyCode(email, code)
+    const result = login(email, password)
     setPending(false)
 
     if (!result.ok) {
@@ -69,11 +53,11 @@ export function LoginView() {
             Sign in to Mana
           </h1>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            We&apos;ll email you a one-time code. No password to remember.
+            Access your wallet, send money, and manage your card.
           </p>
         </div>
         <p className="text-sm text-muted-foreground">
-          Demo OTP: <span className="font-medium text-foreground">{DEMO_OTP}</span>
+          Built for web — keyboard-first, desktop-ready.
         </p>
       </section>
 
@@ -83,111 +67,59 @@ export function LoginView() {
             <ManaLogo />
           </div>
 
-          {step === "email" ? (
-            <form onSubmit={handleSendCode} className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-semibold tracking-tight">
-                  What&apos;s your email?
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  We&apos;ll send a code to confirm it&apos;s you.
-                </p>
-              </div>
+          <form onSubmit={handleLogin} className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-3xl font-semibold tracking-tight">
+                Welcome back
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Sign in with your email and password.
+              </p>
+            </div>
 
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="email">Email address</FieldLabel>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    autoFocus
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    className="h-12 rounded-2xl bg-card px-4"
-                  />
-                </Field>
-              </FieldGroup>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Email address</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  autoFocus
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="h-12 rounded-2xl bg-card px-4"
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="h-12 rounded-2xl bg-card px-4"
+                />
+              </Field>
+            </FieldGroup>
 
-              <Button
-                type="submit"
-                className="h-12 w-full rounded-full text-sm font-medium"
-              >
-                Send code
-              </Button>
+            <Button
+              type="submit"
+              disabled={pending || !email.trim() || !password.trim()}
+              className="h-12 w-full rounded-full text-sm font-medium"
+            >
+              Sign in
+            </Button>
 
-              <Link
-                href={routes.welcome}
-                className="text-center text-sm text-muted-foreground transition-opacity hover:opacity-70"
-              >
-                Back to welcome
-              </Link>
-            </form>
-          ) : (
-            <form onSubmit={handleVerify} className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-semibold tracking-tight">
-                  Enter the code
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Sent to {email}. It expires shortly.
-                </p>
-              </div>
-
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="otp">Verification code</FieldLabel>
-                  <Input
-                    id="otp"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    autoFocus
-                    placeholder="6-digit code"
-                    value={code}
-                    onChange={(event) =>
-                      setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
-                    }
-                    className="h-12 rounded-2xl bg-card px-4 text-lg tracking-[0.3em] tabular-nums"
-                  />
-                  <FieldDescription>
-                    Type with your keyboard. Demo code: {DEMO_OTP}
-                  </FieldDescription>
-                </Field>
-              </FieldGroup>
-
-              <Button
-                type="submit"
-                disabled={pending || code.length < 6}
-                className="h-12 w-full rounded-full text-sm font-medium"
-              >
-                Verify
-              </Button>
-
-              <div className="flex flex-col gap-2 text-center text-sm">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const result = sendCode(email)
-                    if (result.ok) toast.success("Code resent")
-                  }}
-                  className="font-medium text-primary transition-opacity hover:opacity-80"
-                >
-                  Didn&apos;t get it? Resend code
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep("email")
-                    setCode("")
-                  }}
-                  className="text-muted-foreground transition-opacity hover:opacity-70"
-                >
-                  Use a different email
-                </button>
-              </div>
-            </form>
-          )}
+            <Link
+              href={routes.welcome}
+              className="text-center text-sm text-muted-foreground transition-opacity hover:opacity-70"
+            >
+              Back to welcome
+            </Link>
+          </form>
         </div>
       </section>
     </div>
