@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 130" role="img" aria-label="Mana">
+  <path d="M16 100 L46 24 L76 100 Z" fill="#FFFFFF"></path>
+  <path d="M50 100 L80 38 L110 100 Z" fill="#F2664B"></path>
+  <path d="M6 108 L118 108" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"></path>
+  <path d="M22 118 Q34 114 46 118 T70 118 T94 118" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.55"></path>
+</svg>

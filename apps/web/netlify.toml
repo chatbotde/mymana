@@ -1,0 +1,16 @@
+# Netlify config for the web app inside the Turborepo monorepo.
+#
+# In Netlify UI (Site configuration → Build & deploy → Build settings):
+#   - Base directory: leave empty (repo root = mymanatest)
+#   - Package directory: apps/web
+#   - Publish directory: leave empty (Next.js plugin sets this)
+#   - Framework: Next.js
+
+[build]
+  command = "npx turbo run build --filter=web"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

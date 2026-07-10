@@ -1,0 +1,8 @@
+# Legacy route aliases (also defined in next.config.ts).
+# Netlify applies these even when the Next.js adapter handles routing.
+
+/add-money/account    /add-money-ach                    302
+/send/to              /remit/compose                    302
+/send/review          /remit/review                     302
+/save/add             /save/amount?mode=deposit         302
+/save/withdraw        /save/amount?mode=withdraw        302
