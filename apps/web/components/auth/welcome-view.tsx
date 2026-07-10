@@ -9,9 +9,9 @@ import { Button } from "@workspace/ui/components/button"
 export function WelcomeView() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <section className="relative flex flex-col justify-between bg-[linear-gradient(160deg,oklch(0.94_0.02_70)_0%,oklch(0.97_0.01_85)_45%,oklch(0.92_0.03_50)_100%)] px-8 py-10 md:px-12 md:py-14">
+      <section className="relative flex flex-col bg-[linear-gradient(160deg,oklch(0.94_0.02_70)_0%,oklch(0.97_0.01_85)_45%,oklch(0.92_0.03_50)_100%)] px-8 py-10 md:px-12 md:py-14">
         <ManaLogo />
-        <div className="flex max-w-lg flex-col gap-5 py-16">
+        <div className="flex max-w-lg flex-1 flex-col justify-center gap-5 py-16">
           <h1 className="font-serif text-4xl leading-tight tracking-tight text-balance md:text-5xl">
             The financial home for Filipinos abroad.
           </h1>
@@ -19,9 +19,6 @@ export function WelcomeView() {
             Free remittance. Real banking. Built for the way you support family.
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          Built for web — keyboard-first, desktop-ready.
-        </p>
       </section>
 
       <section className="flex flex-col justify-center bg-background px-8 py-12 md:px-16">

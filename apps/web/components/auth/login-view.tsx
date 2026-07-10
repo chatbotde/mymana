@@ -56,9 +56,6 @@ export function LoginView() {
             Access your wallet, send money, and manage your card.
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          Built for web — keyboard-first, desktop-ready.
-        </p>
       </section>
 
       <section className="flex flex-col justify-center px-6 py-12 md:px-16">
